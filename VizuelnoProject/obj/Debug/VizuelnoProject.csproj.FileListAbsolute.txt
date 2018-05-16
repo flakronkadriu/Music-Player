@@ -1,0 +1,13 @@
+C:\Users\Flakron\Documents\Visual Studio 2013\Projects\VizuelnoProject\VizuelnoProject\obj\Debug\VizuelnoProject.csprojResolveAssemblyReference.cache
+C:\Users\Flakron\Documents\Visual Studio 2013\Projects\VizuelnoProject\VizuelnoProject\obj\Debug\VizuelnoProject.Form1.resources
+C:\Users\Flakron\Documents\Visual Studio 2013\Projects\VizuelnoProject\VizuelnoProject\obj\Debug\VizuelnoProject.Properties.Resources.resources
+C:\Users\Flakron\Documents\Visual Studio 2013\Projects\VizuelnoProject\VizuelnoProject\obj\Debug\VizuelnoProject.csproj.GenerateResource.cache
+C:\Users\Flakron\Documents\Visual Studio 2013\Projects\VizuelnoProject\VizuelnoProject\obj\Debug\VizuelnoProject.csproj.CoreCompileInputs.cache
+C:\Users\Flakron\Documents\Visual Studio 2013\Projects\VizuelnoProject\VizuelnoProject\bin\Debug\VizuelnoProject.exe.config
+C:\Users\Flakron\Documents\Visual Studio 2013\Projects\VizuelnoProject\VizuelnoProject\bin\Debug\VizuelnoProject.exe
+C:\Users\Flakron\Documents\Visual Studio 2013\Projects\VizuelnoProject\VizuelnoProject\bin\Debug\VizuelnoProject.pdb
+C:\Users\Flakron\Documents\Visual Studio 2013\Projects\VizuelnoProject\VizuelnoProject\bin\Debug\NAudio.dll
+C:\Users\Flakron\Documents\Visual Studio 2013\Projects\VizuelnoProject\VizuelnoProject\bin\Debug\NAudio.xml
+C:\Users\Flakron\Documents\Visual Studio 2013\Projects\VizuelnoProject\VizuelnoProject\obj\Debug\VizuelnoProject.csproj.CopyComplete
+C:\Users\Flakron\Documents\Visual Studio 2013\Projects\VizuelnoProject\VizuelnoProject\obj\Debug\VizuelnoProject.exe
+C:\Users\Flakron\Documents\Visual Studio 2013\Projects\VizuelnoProject\VizuelnoProject\obj\Debug\VizuelnoProject.pdb
