@@ -407,5 +407,17 @@ namespace VizuelnoProject
                 this.listBox1.Items.Insert(index, data);
             }
         }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog() != DialogResult.Cancel)
+            {
+                string file = openFileDialog1.FileName;
+                string name = Path.GetFileNameWithoutExtension(file);
+                Mp3FileReader reader = new Mp3FileReader(file);
+                playList.Add(new AudioFileInfo { filePath = file, fileName = name, fileDuration = reader.TotalTime });
+                updateListBox();
+            }
+        }
     }
 }
