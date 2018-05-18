@@ -1,4 +1,3 @@
-C:\Users\Flakron\Documents\Visual Studio 2013\Projects\VizuelnoProject\VizuelnoProject\obj\Debug\VizuelnoProject.csprojResolveAssemblyReference.cache
 C:\Users\Flakron\Documents\Visual Studio 2013\Projects\VizuelnoProject\VizuelnoProject\obj\Debug\VizuelnoProject.Form1.resources
 C:\Users\Flakron\Documents\Visual Studio 2013\Projects\VizuelnoProject\VizuelnoProject\obj\Debug\VizuelnoProject.Properties.Resources.resources
 C:\Users\Flakron\Documents\Visual Studio 2013\Projects\VizuelnoProject\VizuelnoProject\obj\Debug\VizuelnoProject.csproj.GenerateResource.cache
@@ -11,3 +10,4 @@ C:\Users\Flakron\Documents\Visual Studio 2013\Projects\VizuelnoProject\VizuelnoP
 C:\Users\Flakron\Documents\Visual Studio 2013\Projects\VizuelnoProject\VizuelnoProject\obj\Debug\VizuelnoProject.csproj.CopyComplete
 C:\Users\Flakron\Documents\Visual Studio 2013\Projects\VizuelnoProject\VizuelnoProject\obj\Debug\VizuelnoProject.exe
 C:\Users\Flakron\Documents\Visual Studio 2013\Projects\VizuelnoProject\VizuelnoProject\obj\Debug\VizuelnoProject.pdb
+C:\Users\Flakron\Documents\Visual Studio 2013\Projects\VizuelnoProject\VizuelnoProject\obj\Debug\VizuelnoProject.csprojAssemblyReference.cache

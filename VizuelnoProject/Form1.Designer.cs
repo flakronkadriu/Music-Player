@@ -479,7 +479,10 @@
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(469, 260);
             this.listBox1.TabIndex = 0;
+            this.listBox1.DragDrop += new System.Windows.Forms.DragEventHandler(this.listBox1_DragDrop);
+            this.listBox1.DragOver += new System.Windows.Forms.DragEventHandler(this.listBox1_DragOver);
             this.listBox1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseDoubleClick);
+            this.listBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseDown);
             // 
             // Form1
             // 

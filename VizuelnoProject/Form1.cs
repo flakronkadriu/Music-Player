@@ -25,11 +25,10 @@ namespace VizuelnoProject
         int repeat = 0;
         bool first = true;
         bool shuffle = false;
-        private bool _isDragging;
-        private Point _clickPoint;
         public Form1()
         {
             InitializeComponent();
+            this.listBox1.AllowDrop = true;
             this.songTrackBar.Value = 0;
             listBox1.SelectedIndexChanged += selectedMusicChanged;
             this.waveOut.PlaybackStopped += waveOut_PlaybackStopped;
@@ -225,7 +224,7 @@ namespace VizuelnoProject
             if (playingSong != null)
             {
                 int indexOf = playList.IndexOf(playingSong);
-                if(indexOf < playList.Count)
+                if(indexOf < playList.Count - 1)
                 {
                     this.waveOut.Stop();
                     this.timer.Stop();
@@ -379,6 +378,33 @@ namespace VizuelnoProject
                 button7.BackColor = SystemColors.Control;
                 button7.ForeColor = Color.Black;
                 shuffle = false;
+            }
+        }
+
+        private void listBox1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if(e.Clicks < 2)
+            {
+                if (this.listBox1.SelectedItem == null) return;
+                this.listBox1.DoDragDrop(this.listBox1.SelectedItem, DragDropEffects.Move);
+            }
+        }
+
+        private void listBox1_DragOver(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Move;
+        }
+
+        private void listBox1_DragDrop(object sender, DragEventArgs e)
+        {
+            if (listBox1.Items.Count > 0)
+            {
+                Point point = listBox1.PointToClient(new Point(e.X, e.Y));
+                int index = this.listBox1.IndexFromPoint(point);
+                if (index < 0) index = this.listBox1.Items.Count - 1;
+                AudioFileInfo data = (AudioFileInfo) listBox1.SelectedItem;
+                this.listBox1.Items.Remove(data);
+                this.listBox1.Items.Insert(index, data);
             }
         }
     }
