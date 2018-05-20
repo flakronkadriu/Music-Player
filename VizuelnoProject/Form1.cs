@@ -25,6 +25,8 @@ namespace VizuelnoProject
         int repeat = 0;
         bool first = true;
         bool shuffle = false;
+        bool isDragDrop = false;
+        bool scrollingMax = false;
         public Form1()
         {
             InitializeComponent();
@@ -32,6 +34,8 @@ namespace VizuelnoProject
             this.songTrackBar.Value = 0;
             listBox1.SelectedIndexChanged += selectedMusicChanged;
             this.waveOut.PlaybackStopped += waveOut_PlaybackStopped;
+            openFileDialog1.Filter = "All Supported Audio | *.mp3; *.wma | MP3s | *.mp3 | WMAs | *.wma";
+            openFileDialog1.AutoUpgradeEnabled = false;
             volumeTrack.Value = (int)this.waveOut.Volume * 100;
             this.timer.Elapsed += (o, e) =>
             {
@@ -60,8 +64,11 @@ namespace VizuelnoProject
 
         private void selectedMusicChanged(object sender, EventArgs e)
         {
-            AudioFileInfo mp3File = (AudioFileInfo)this.listBox1.SelectedItem;
-            this.selectedSong = mp3File;
+            if (!isDragDrop)
+            {
+                AudioFileInfo mp3File = (AudioFileInfo)this.listBox1.SelectedItem;
+                this.selectedSong = mp3File;
+            }
         }
 
         private void playSelectedFile()
@@ -244,8 +251,29 @@ namespace VizuelnoProject
 
         private void songTrackBar_Scroll(object sender, EventArgs e)
         {
-            this.waveOut.Pause();
-            Seeking(songTrackBar.Value);
+            if (playingSong != null)
+            {
+                if (songTrackBar.Value < songTrackBar.Maximum)
+                {
+                    this.waveOut.Pause();
+                    Seeking(songTrackBar.Value);
+                }
+                else if (songTrackBar.Value == songTrackBar.Maximum)
+                {
+                    scrollingMax = true;
+                    int indexOf = playList.IndexOf(playingSong);
+                    if (indexOf < playList.Count - 1)
+                    {
+                        this.waveOut.Stop();
+                        this.timer.Stop();
+                        this.selectedSong = playList.ElementAt(indexOf + 1);
+                        listBox1.SelectedItem = this.selectedSong;
+                        listBox1.Focus();
+                        listBox1.Update();
+                        this.playSelectedFile();
+                    }
+                }
+            }
         }
 
         private void songTrackBar_ValueChanged(object sender, EventArgs e)
@@ -255,12 +283,13 @@ namespace VizuelnoProject
                 if (shuffle)
                 {
                     playedList.Add(playingSong);
-                    if(playList.Count == playedList.Count)
+                    if (playList.Count == playedList.Count)
                     {
                         this.waveOut.Stop();
                         this.timer.Stop();
                     }
-                    else {
+                    else
+                    {
                         int index = random.Next(0, playList.Count);
                         while (playedList.Contains(playList.ElementAt(index)))
                         {
@@ -277,19 +306,33 @@ namespace VizuelnoProject
 
                 }
                 else
-                { 
-                    int indexOf = playList.IndexOf(playingSong);
-                    if (indexOf == playList.Count - 1)
+                {
+                    if (!scrollingMax)
                     {
-                        if (repeat == 1)
+                        int indexOf = playList.IndexOf(playingSong);
+                        if (indexOf == playList.Count - 1)
                         {
-                            this.waveOut.Stop();
-                            this.timer.Stop();
-                            this.selectedSong = playList.ElementAt(0);
-                            listBox1.SelectedItem = this.selectedSong;
-                            listBox1.Focus();
-                            listBox1.Update();
-                            this.playSelectedFile();
+                            if (repeat == 1)
+                            {
+                                this.waveOut.Stop();
+                                this.timer.Stop();
+                                this.selectedSong = playList.ElementAt(0);
+                                listBox1.SelectedItem = this.selectedSong;
+                                listBox1.Focus();
+                                listBox1.Update();
+                                this.playSelectedFile();
+                            }
+                            else if (repeat == 2)
+                            {
+                                this.waveOut.Stop();
+                                this.timer.Stop();
+                                this.Loop();
+                            }
+                            else
+                            {
+                                this.waveOut.Stop();
+                                this.timer.Stop();
+                            }
                         }
                         else if (repeat == 2)
                         {
@@ -297,30 +340,20 @@ namespace VizuelnoProject
                             this.timer.Stop();
                             this.Loop();
                         }
-                        else
+                        else if (indexOf < playList.Count)
                         {
                             this.waveOut.Stop();
                             this.timer.Stop();
+                            this.selectedSong = playList.ElementAt(indexOf + 1);
+                            listBox1.SelectedItem = this.selectedSong;
+                            listBox1.Focus();
+                            listBox1.Update();
+                            this.playSelectedFile();
                         }
-                    }
-                    else if (repeat == 2)
-                    {
-                        this.waveOut.Stop();
-                        this.timer.Stop();
-                        this.Loop();
-                    }
-                    else if (indexOf < playList.Count)
-                    {
-                        this.waveOut.Stop();
-                        this.timer.Stop();
-                        this.selectedSong = playList.ElementAt(indexOf + 1);
-                        listBox1.SelectedItem = this.selectedSong;
-                        listBox1.Focus();
-                        listBox1.Update();
-                        this.playSelectedFile();
                     }
                 }
             }
+            scrollingMax = false;
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -360,8 +393,10 @@ namespace VizuelnoProject
             }
             else
             {
+                this.selectedSong = (AudioFileInfo)listBox1.SelectedItem;
                 this.playSelectedFile();
             }
+            Invalidate(true);
 
         }
 
@@ -383,11 +418,13 @@ namespace VizuelnoProject
 
         private void listBox1_MouseDown(object sender, MouseEventArgs e)
         {
-            if(e.Clicks < 2)
+            if (e.Button == MouseButtons.Left && e.Clicks == 1)
             {
                 if (this.listBox1.SelectedItem == null) return;
+                isDragDrop = true;
                 this.listBox1.DoDragDrop(this.listBox1.SelectedItem, DragDropEffects.Move);
             }
+            Invalidate(true);
         }
 
         private void listBox1_DragOver(object sender, DragEventArgs e)
@@ -397,18 +434,24 @@ namespace VizuelnoProject
 
         private void listBox1_DragDrop(object sender, DragEventArgs e)
         {
-            if (listBox1.Items.Count > 0)
+            if (!e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 Point point = listBox1.PointToClient(new Point(e.X, e.Y));
                 int index = this.listBox1.IndexFromPoint(point);
                 if (index < 0) index = this.listBox1.Items.Count - 1;
                 AudioFileInfo data = (AudioFileInfo) listBox1.SelectedItem;
                 this.listBox1.Items.Remove(data);
+                this.playList.Remove(data);
+                this.playList.Insert(index, data);
                 this.listBox1.Items.Insert(index, data);
+                listBox1.SelectedItem = this.selectedSong;
+                listBox1.Focus();
+                listBox1.Update();
+                isDragDrop = false;
             }
         }
 
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        private void openToolStripButton_Click(object sender, EventArgs e)
         {
             if (openFileDialog1.ShowDialog() != DialogResult.Cancel)
             {
@@ -417,6 +460,24 @@ namespace VizuelnoProject
                 Mp3FileReader reader = new Mp3FileReader(file);
                 playList.Add(new AudioFileInfo { filePath = file, fileName = name, fileDuration = reader.TotalTime });
                 updateListBox();
+                if (first)
+                {
+
+                    this.selectedSong = playList.ElementAt(0);
+                    listBox1.SelectedItem = this.selectedSong;
+                    listBox1.Focus();
+                    listBox1.Update();
+                    first = false;
+                    this.playSelectedFile();
+
+                }
+                else
+                {
+                    listBox1.SelectedItem = this.selectedSong;
+                    listBox1.Focus();
+                    listBox1.Update();
+                }
+                
             }
         }
     }
