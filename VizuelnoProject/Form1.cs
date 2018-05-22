@@ -59,7 +59,7 @@ namespace VizuelnoProject
 
         private void waveOut_PlaybackStopped(object sender, StoppedEventArgs e)
         {
-            
+
         }
 
         private void selectedMusicChanged(object sender, EventArgs e)
@@ -95,7 +95,8 @@ namespace VizuelnoProject
             waveOut.Play();
             this.songProgress = 0;
             this.timer.Start();
-           
+            playButton.BackColor = Color.Black;
+
         }
         private void Seeking(int value)
         {
@@ -184,14 +185,19 @@ namespace VizuelnoProject
 
         private void playButton_Click(object sender, EventArgs e)
         {
-            if (this.waveOut.PlaybackState == PlaybackState.Paused && selectedSong == playingSong )
+            if (this.waveOut.PlaybackState == PlaybackState.Paused && selectedSong == playingSong)
             {
                 this.waveOut.Play();
                 this.timer.Start();
+                this.playButton.BackColor = Color.Black;
+                this.pauseButton.BackColor = Color.White;
+                this.stopButton.BackColor = Color.White;
             }
-            else if(this.waveOut.PlaybackState != PlaybackState.Playing)
+            else if (this.waveOut.PlaybackState != PlaybackState.Playing)
             {
-            this.playSelectedFile();
+                this.playSelectedFile();
+                this.pauseButton.BackColor = Color.White;
+                this.stopButton.BackColor = Color.White;
             }
         }
 
@@ -199,6 +205,9 @@ namespace VizuelnoProject
         {
             this.waveOut.Pause();
             this.timer.Stop();
+            pauseButton.BackColor = Color.Black;
+            this.playButton.BackColor = Color.White;
+            this.stopButton.BackColor = Color.White;
         }
 
         private void backTrackButton_Click(object sender, EventArgs e)
@@ -224,6 +233,9 @@ namespace VizuelnoProject
         {
             this.waveOut.Stop();
             this.timer.Stop();
+            stopButton.BackColor = Color.Black;
+            this.playButton.BackColor = Color.White;
+            this.pauseButton.BackColor = Color.White;
         }
 
         private void nextButton_Click(object sender, EventArgs e)
@@ -231,7 +243,7 @@ namespace VizuelnoProject
             if (playingSong != null)
             {
                 int indexOf = playList.IndexOf(playingSong);
-                if(indexOf < playList.Count - 1)
+                if (indexOf < playList.Count - 1)
                 {
                     this.waveOut.Stop();
                     this.timer.Stop();
@@ -271,6 +283,12 @@ namespace VizuelnoProject
                         listBox1.Focus();
                         listBox1.Update();
                         this.playSelectedFile();
+                    }
+                    else
+                    {
+                        this.waveOut.Stop();
+                        this.timer.Stop();
+                        this.songTrackBar.Value = 0;
                     }
                 }
             }
@@ -359,26 +377,20 @@ namespace VizuelnoProject
         private void button3_Click(object sender, EventArgs e)
         {
             repeat++;
-            if(repeat == 1)
+            if (repeat == 1)
             {
-                button3.Text = "Repeat Song";
-                button3.BackColor = Color.Blue;
-                button3.ForeColor = Color.White;
+                button3.BackColor = Color.Black;
                 loopingStatus.Text = "On";
 
             }
-            else if(repeat == 2)
+            else if (repeat == 2)
             {
-                button3.Text = "Repeat Off";
-                button3.BackColor = Color.BlueViolet;
-                button3.ForeColor = Color.White;
+                button3.BackColor = Color.Red;
                 loopingStatus.Text = "Song Repeating";
             }
             else
             {
-                button3.Text = "Repeat";
                 button3.BackColor = SystemColors.Control;
-                button3.ForeColor = Color.Black;
                 loopingStatus.Text = "Off";
                 repeat = 0;
             }
@@ -404,14 +416,12 @@ namespace VizuelnoProject
         {
             if (!shuffle)
             {
-                button7.BackColor = Color.Blue;
-                button7.ForeColor = Color.White;
+                button7.BackColor = Color.Black;
                 shuffle = true;
             }
             else
             {
-                button7.BackColor = SystemColors.Control;
-                button7.ForeColor = Color.Black;
+                button7.BackColor = Color.White;
                 shuffle = false;
             }
         }
@@ -439,7 +449,7 @@ namespace VizuelnoProject
                 Point point = listBox1.PointToClient(new Point(e.X, e.Y));
                 int index = this.listBox1.IndexFromPoint(point);
                 if (index < 0) index = this.listBox1.Items.Count - 1;
-                AudioFileInfo data = (AudioFileInfo) listBox1.SelectedItem;
+                AudioFileInfo data = (AudioFileInfo)listBox1.SelectedItem;
                 this.listBox1.Items.Remove(data);
                 this.playList.Remove(data);
                 this.playList.Insert(index, data);
@@ -477,8 +487,24 @@ namespace VizuelnoProject
                     listBox1.Focus();
                     listBox1.Update();
                 }
-                
+
             }
+        }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            if (listBox1.SelectedItem == null) return;
+            AudioFileInfo deleteObject = (AudioFileInfo)this.listBox1.SelectedItem;
+            if (playingSong == deleteObject) return;
+            listBox1.Items.Remove(deleteObject);
+            playList.Remove(deleteObject);
+            if (playedList.Count > 0)
+            {
+                playedList.Remove(deleteObject);
+            }
+            listBox1.SelectedItem = this.selectedSong;
+            listBox1.Focus();
+            listBox1.Update();
         }
     }
 }
